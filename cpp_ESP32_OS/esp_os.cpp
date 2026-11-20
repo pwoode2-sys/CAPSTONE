@@ -4,39 +4,40 @@
 #include "MAX30105.h"
 #include "spo2_algorithm.h"
 
-// ESP32 I2C connections (classic ESP32 DevKit)
+// ESP32 I2C connections
 #define SDA_PIN 21
 #define SCL_PIN 22
 
 MAX30105 particleSensor;
 
-// Store 100 red and infrared samples
-const int BUFFER_SIZE = 100;
+// Number of red and infrared samples
+// Renamed to avoid conflict with SparkFun library
+const int SAMPLE_BUFFER_SIZE = 100;
 
-uint32_t irBuffer[BUFFER_SIZE];
-uint32_t redBuffer[BUFFER_SIZE];
+uint32_t irBuffer[SAMPLE_BUFFER_SIZE];
+uint32_t redBuffer[SAMPLE_BUFFER_SIZE];
 
-// Calculated health measurements
+// Calculated measurements
 int32_t heartRate = 0;
 int32_t spo2 = 0;
 
-// Flags indicating whether calculations are valid
+// Measurement validity flags
 int8_t validHeartRate = 0;
 int8_t validSPO2 = 0;
 
 // Read one sample from sensor
 void readSensor(int index) {
 
-  // Wait for a new sample
+  // Wait for new sensor data
   while (!particleSensor.available()) {
     particleSensor.check();
   }
 
-  // Save the red and infrared readings
+  // Save red and infrared readings
   redBuffer[index] = particleSensor.getRed();
   irBuffer[index] = particleSensor.getIR();
 
-  // Advance to next sample
+  // Move to the next sample
   particleSensor.nextSample();
 }
 
@@ -45,7 +46,7 @@ void calculateVitals() {
 
   maxim_heart_rate_and_oxygen_saturation(
     irBuffer,
-    BUFFER_SIZE,
+    SAMPLE_BUFFER_SIZE,
     redBuffer,
     &spo2,
     &validSPO2,
@@ -60,7 +61,7 @@ void printVitals() {
   Serial.println("----------------------------");
 
   Serial.print("IR Value: ");
-  Serial.println(irBuffer[BUFFER_SIZE - 1]);
+  Serial.println(irBuffer[SAMPLE_BUFFER_SIZE - 1]);
 
   Serial.print("Heart Rate: ");
 
@@ -90,10 +91,10 @@ void setup() {
 
   Serial.println("Initializing MAX30102...");
 
-  // Initialize ESP32 I2C communication
+  // Initialize I2C communication
   Wire.begin(SDA_PIN, SCL_PIN);
 
-  // Initialize MAX30102 sensor
+  // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) {
 
     Serial.println("MAX30102 not found!");
@@ -109,7 +110,7 @@ void setup() {
   // Sensor configuration
   byte ledBrightness = 60;
   byte sampleAverage = 4;
-  byte ledMode = 2;        // Red and IR LEDs
+  byte ledMode = 2;       // Red and IR LEDs
   int sampleRate = 100;
   int pulseWidth = 411;
   int adcRange = 4096;
@@ -123,18 +124,18 @@ void setup() {
     adcRange
   );
 
-  // MAX30102 does not need the green LED
+  // Disable green LED
   particleSensor.setPulseAmplitudeGreen(0);
 
   Serial.println("Place finger on sensor.");
   Serial.println("Collecting initial samples...");
 
-  // Collect initial 100 samples
-  for (int i = 0; i < BUFFER_SIZE; i++) {
+  // Collect first 100 samples
+  for (int i = 0; i < SAMPLE_BUFFER_SIZE; i++) {
     readSensor(i);
   }
 
-  // Calculate initial values
+  // Calculate initial measurements
   calculateVitals();
 
   Serial.println("Measurement started.");
@@ -142,21 +143,21 @@ void setup() {
 
 void loop() {
 
-  // Keep the most recent 75 samples
-  for (int i = 25; i < BUFFER_SIZE; i++) {
+  // Keep the latest 75 samples
+  for (int i = 25; i < SAMPLE_BUFFER_SIZE; i++) {
 
     redBuffer[i - 25] = redBuffer[i];
     irBuffer[i - 25] = irBuffer[i];
   }
 
   // Collect 25 new samples
-  for (int i = 75; i < BUFFER_SIZE; i++) {
+  for (int i = 75; i < SAMPLE_BUFFER_SIZE; i++) {
     readSensor(i);
   }
 
-  // Recalculate measurements
+  // Calculate heart rate and SpO2
   calculateVitals();
 
-  // Display values
+  // Print results
   printVitals();
 }
