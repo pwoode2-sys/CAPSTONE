@@ -5,8 +5,7 @@
 #include "spo2_algorithm.h"
 
 // =====================================================
-// ESP32 / MAX30102 DIAGNOSTIC PROGRAM
-// =====================================================
+// ESP32 / MAX30102 interpreter. Sends raw data to : MAX30102_PLOT_READ.py to log and graph
 
 #define SDA_PIN 21
 #define SCL_PIN 22
