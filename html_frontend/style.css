@@ -1,0 +1,41 @@
+:root {
+  --accent: #65686a;
+  --ok: #d43333;
+  --crit: hsla(0, 29%, 95%, 0.974);
+}
+button { background: var(--accent); }
+
+h1 { color: rgb(255, 255, 255); }
+.card { padding: 1rem; }
+#hrVal { font-size: 3rem; }
+
+.hidden { display: none; }
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 800px) {
+  .vitals { grid-template-columns: 1fr; }
+}
+
+.card.ok   { border-top: 6px solid rgb(230, 240, 230); }
+.card.warn { border-top: 6px solid rgb(116, 115, 114); }
+.card.crit { border-top: 6px solid rgb(133, 100, 100); }
+
+img { max-width: 100%; height: auto; object-fit: cover; }
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+}
+

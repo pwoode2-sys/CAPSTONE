@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <h1>
+    Welcome to NeoNatal
+   </h1>
+   <h2>
+    Your child's health is our priority
+   </h2> 
+    <p>
+        Here at NeoNatal, we are dedicated to providing the best care for your newborns. Our team of experienced healthcare professionals is committed to ensuring the well-being of your child from the moment they enter the world. We offer a range of services including neonatal care, parental support, and educational resources to help you navigate the early stages of parenthood.
+    </p>
+  <!-- 1. Set/Register Username and Password -->
+  <h2>Create Account</h2>
+  <form onsubmit="return registerUser()">
+    <label for="regUser">Username:</label>
+    <input type="text" id="regUser" required><br><br>
+
+    <label for="regPass">Password:</label>
+    <input type="password" id="regPass" required><br><br>
+
+    <button type="submit">Save Credentials</button>
+  </form>
+
+  <hr>
+    <!-- 2. Login and Match Arrays -->
+  <h2>Login</h2>
+  <form onsubmit="return loginUser()">
+    <label for="loginUser">Username:</label>
+    <input type="text" id="loginUser" required><br><br>
+
+    <label for="loginPass">Password:</label>
+    <input type="password" id="loginPass" required><br><br>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    // Load existing arrays from localStorage, or start with empty arrays
+    let username = JSON.parse(localStorage.getItem("username")) || [];
+    let password = JSON.parse(localStorage.getItem("password")) || [];
+
+    function registerUser() {
+      const newUser = document.getElementById("regUser").value;
+      const newPass = document.getElementById("regPass").value;
+
+      // Add the entered values to the arrays
+      username.push(newUser);
+      password.push(newPass);
+
+      // Save updated arrays so they persist
+      localStorage.setItem("username", JSON.stringify(username));
+      localStorage.setItem("password", JSON.stringify(password));
+
+      alert("Saved! You can now log in.");
+      document.getElementById("regUser").value = "";
+      document.getElementById("regPass").value = "";
+      return false;
+    }
+
+    function loginUser() {
+      const enteredUser = document.getElementById("loginUser").value;
+      const enteredPass = document.getElementById("loginPass").value;
+
+      // Find the index position of the entered username
+      const index = username.indexOf(enteredUser);
+
+      // Check if username exists AND the password at that exact same index matches
+      if (index !== -1 && password[index] === enteredPass) {
+        window.location.href = "secret-page.html";
+      } else {
+        alert("Invalid username or password.");
+      }
+
+      return false;
+    }
+  </script>
+</form>
+</body>
+</html>

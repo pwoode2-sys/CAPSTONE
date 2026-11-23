@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoNatal Portal (Browser-Only)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, Arial, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+</head>
+
+<body>  
+<section id="publicView">WELCOME</section>
+<section id="dashboardView" class="hidden">WELCOME TO THE DASHBOARD</section>
+
+<h1>Welcome to NeoNatal Portal</h1>
+<p>Your Child health is our priority </p>
+<img src="images/logo.svg" alt="NeoNatal logo" width="64" height="64">
+<form id="loginForm">
+  Welcome! Please log in to access the dashboard.
+</form>
+<label for="UserLogin">Username</label>
+<input type="text" id="UserLogin" required>
+<label for="loginPass">Password</label>
+<input type="password" id="loginPass" minlength="8" required>
+<button type="submit">Login</button>
+<button type="button" id="logoutBtn">Log out</button>
+<select id="sourceSelect">
+  <option value="sim">Simulated</option>
+  <option value="esp32">ESP32</option>
+</select>
+<div class="card" id="hrCard">
+  <span id="hrVal">--</span> bpm
+</div>
+<svg viewBox="0 0 100 40"><polyline id="hrLine" points=""></polyline></svg>
+<script src="app.js"></script>
+
+
+</body>
+</html>
