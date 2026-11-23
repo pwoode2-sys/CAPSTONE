@@ -1,41 +1,152 @@
 :root {
-  --accent: #65686a;
-  --ok: #d43333;
-  --crit: hsla(0, 29%, 95%, 0.974);
+  --ink: #f5fffe;
+  --muted: #d1d8d7;
+  --paper: #e5efec;
+  --surface: #ffffff;
+  --line: #d5dedc;
+  --accent: #f01919;
+  --accent-ink: #ffffff;
+  --ok: #d62468;
+  --crit: #b3372f;
+  --none: #7a8583;
 }
-button { background: var(--accent); }
 
-h1 { color: rgb(255, 255, 255); }
-.card { padding: 1rem; }
-#hrVal { font-size: 3rem; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e6efed;
+    --muted: #bc2136;
+    --paper: #121b1a;
+    --surface: #1b2625;
+    --line: #2f3d3b;
+    --accent: #d37306;
+    --accent-ink: #0d1514;
+    --ok: #5cc388;
+    --crit: #ff8a80;
+    --none: #8a9896;
+  }
+}
 
-.hidden { display: none; }
+* { box-sizing: border-box; }
 
-header {
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+.topbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
 }
+.topbar h1 { margin: 0; font-size: 1.25rem; color: var(--ink); }
+#sessionBar { display: flex; align-items: center; gap: 1rem; }
+
+main { max-width: 60rem; margin: 0 auto; padding: 1.5rem; }
+
+/* ---------- forms ---------- */
+.panel {
+  max-width: 24rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.lead { margin-top: 0; color: var(--muted); }
+
+label { display: block; margin: 1rem 0 0.25rem; font-weight: 600; }
+input, select {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+select { width: auto; }
+
+button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button.secondary {
+  margin: 0;
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--line);
+}
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.tabs { display: flex; gap: 0.5rem; }
+.tabs button {
+  flex: 1;
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--line);
+}
+.tabs button[aria-pressed="true"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.msg { min-height: 1.5rem; margin: 0.5rem 0 0; font-weight: 600; }
+.msg.error { color: var(--crit); }
+.msg.good  { color: var(--ok); }
+
+/* ---------- dashboard ---------- */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+.toolbar label { margin: 0; }
+#status { margin-left: auto; color: var(--muted); }
 
 .vitals {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
-
 @media (max-width: 800px) {
   .vitals { grid-template-columns: 1fr; }
 }
 
-.card.ok   { border-top: 6px solid rgb(230, 240, 230); }
-.card.warn { border-top: 6px solid rgb(116, 115, 114); }
-.card.crit { border-top: 6px solid rgb(133, 100, 100); }
-
-img { max-width: 100%; height: auto; object-fit: cover; }
-
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.5;
-  margin: 0;
+.card {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--none);
+  border-radius: 8px;
 }
+.card.ok   { border-top-color: var(--ok); }
+.card.crit { border-top-color: var(--crit); }
+.card.none { border-top-color: var(--none); }
 
+.card h2 { margin: 0; font-size: 1rem; color: var(--muted); }
+.reading { font-size: 3rem; font-weight: 700; line-height: 1.2; }
+.unit { font-size: 1rem; font-weight: 400; color: var(--muted); }
+.badge { font-weight: 600; }
+.card.ok .badge   { color: var(--ok); }
+.card.crit .badge { color: var(--crit); }
+.card.none .badge { color: var(--none); }
+.range { margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--muted); }
+
+.card svg { display: block; width: 100%; height: 3.5rem; margin-top: 0.75rem; }
+.card polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+
+img { max-width: 100%; height: auto; }

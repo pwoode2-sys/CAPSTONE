@@ -1,45 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoNatal Portal (Browser-Only)</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, Arial, sans-serif;
-        }
-    </style>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeoNatal Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+<body>
+  <header class="topbar">
+    <h1>NeoNatal Portal</h1>
+    <div id="sessionBar" class="hidden">
+      <span id="whoami"></span>
+      <button type="button" id="logoutBtn" class="secondary">Log out</button>
+    </div>
+  </header>
 
-<body>  
-<section id="publicView">WELCOME</section>
-<section id="dashboardView" class="hidden">WELCOME TO THE DASHBOARD</section>
+  <main>
+    <!-- Shown when logged out -->
+    <section id="publicView">
+      <div class="panel">
+        <p class="lead">Your child's health is our priority. Sign up or Log in to see live vitals.</p>
 
-<h1>Welcome to NeoNatal Portal</h1>
-<p>Your Child health is our priority </p>
-<img src="images/logo.svg" alt="NeoNatal logo" width="64" height="64">
-<form id="loginForm">
-  Welcome! Please log in to access the dashboard.
-</form>
-<label for="UserLogin">Username</label>
-<input type="text" id="UserLogin" required>
-<label for="loginPass">Password</label>
-<input type="password" id="loginPass" minlength="8" required>
-<button type="submit">Login</button>
-<button type="button" id="logoutBtn">Log out</button>
-<select id="sourceSelect">
-  <option value="sim">Simulated</option>
-  <option value="esp32">ESP32</option>
-</select>
-<div class="card" id="hrCard">
-  <span id="hrVal">--</span> bpm
-</div>
-<svg viewBox="0 0 100 40"><polyline id="hrLine" points=""></polyline></svg>
-<script src="app.js"></script>
+        <div class="tabs" role="group" aria-label="Account">
+          <button type="button" id="tabLogin" aria-pressed="true">Log in</button>
+          <button type="button" id="tabRegister" aria-pressed="false">Create account</button>
+        </div>
 
+        <p id="authMsg" class="msg" role="alert"></p>
 
+        <form id="loginForm" autocomplete="on">
+          <label for="loginUser">Username</label>
+          <input type="text" id="loginUser" autocomplete="username" required>
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" autocomplete="current-password" minlength="8" required>
+          <button type="submit">Log in</button>
+        </form>
+
+        <form id="registerForm" class="hidden" autocomplete="on">
+          <label for="regUser">Choose a username</label>
+          <input type="text" id="regUser" autocomplete="username" required>
+          <label for="regPass">Choose a password (8+ characters)</label>
+          <input type="password" id="regPass" autocomplete="new-password" minlength="8" required>
+          <label for="regPass2">Confirm password</label>
+          <input type="password" id="regPass2" autocomplete="new-password" minlength="8" required>
+          <button type="submit">Create account</button>
+          <button type="button" id="exportBtn" class="secondary">Download accounts file</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Shown when logged in -->
+    <section id="dashboardView" class="hidden">
+      <div class="toolbar">
+        <span>ESP32 sensor</span>
+        <span id="status" role="status">Starting…</span>
+      </div>
+      <div id="vitals" class="vitals"></div>
+    </section>
+  </main>
+
+  <script src="password.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
