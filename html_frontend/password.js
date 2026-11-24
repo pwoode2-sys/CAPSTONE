@@ -5,8 +5,7 @@ const ITERATIONS   = 150000;       // how many times the scrambling repeats (slo
 const MIN_LENGTH   = 8;            // shortest allowed password
 const MAX_ATTEMPTS = 5;            // wrong tries before a lockout
 const LOCK_SECONDS = 30;           // lockout length
-const USERS_FILE   = "password.json";   // accounts file read when the page opens
-
+const USERS_FILE   = "/users";   // served by server.js, which reads passwords.txt
 
 /* ---------- 2. SMALL HELPERS ---------- */
 
@@ -140,14 +139,25 @@ async function doRegister() {
   const salt = crypto.getRandomValues(new Uint8Array(16));   // different per user
   const hash = await hashPassword(password, salt, ITERATIONS);
 
-  users.push({
+    const newUser = {
     username: username,
     salt: bytesToHex(salt),
     hash: hash,
-    iterations: ITERATIONS   // saved so ITERATIONS can be raised later without breaking old accounts
-  });
-  saveUsers(users);
-
+    iterations: ITERATIONS
+  };
+  try {
+    const res = await fetch("/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser)
+    });
+    if (res.status === 409) { notify("That username is already taken."); return; }
+    if (!res.ok) throw new Error("save failed");
+    fileUsers.push(newUser);   // so you can log in right away
+  } catch (err) {
+    users.push(newUser);       // server not running: fall back to browser storage
+    saveUsers(users);
+  }
   document.getElementById("regUser").value = "";
   document.getElementById("regPass").value = "";
   document.getElementById("regPass2").value = "";
